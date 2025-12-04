@@ -1,9 +1,11 @@
 import time
 
 from aiohttp.web_fileresponse import content_type
-from bot import bot, openai_client
+from bot import bot, client
 from telebot import types
 from promts import *
+from buffer import *
+
 
 @bot.callback_query_handler(func=lambda callback: callback.data == 'menu')
 #Menu
@@ -39,24 +41,36 @@ async def middleAges(callback):
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "firstMA")
 async def firstMA(callback):
+    promt = promt11
+    user_id = callback.message.chat.id
 
-    promt = promt12
+    add_to_history(user_id, 'system', promt)
+    text = get_context(user_id)
+    text= text[0]['content']
 
     await bot.send_chat_action(callback.message.chat.id, 'Typing')
 
-    responce = openai_client.responses.create(model='gpt-5-nano', input=promt, store=True)
-    ans = responce.output_text
+    responce = client.chat.completions.create(model="GigaChat", messages=[{"role": "user", "content": text}])
+    ans = responce.choices[0].message.content
 
     await bot.send_message(callback.message.chat.id, ans)
+    add_to_history(user_id, 'assistant', ans)
+
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "secondMA")
 async def secondMA(callback):
+    promt = promt12
+    user_id = callback.message.chat.id
+
+    add_to_history(user_id, 'bot', promt)
 
     await bot.send_chat_action(callback.message.chat.id, 'Typing')
 
-    responce = openai_client.responses.create(model='gpt-5-nano', input=promt12, store=True)
-    ans = responce.output_text
+    responce = client.chat.completions.create(model="GigaChat", messages=[{"role": "user", "content": promt12}])
+    ans = responce.choices[0].message.content
+
     await bot.send_message(callback.message.chat.id, ans)
+    add_to_history(user_id, 'bot', ans)
 
 #Cyberpunk
 @bot.callback_query_handler(func=lambda callback: callback.data == 'cyberpunk')
@@ -71,23 +85,34 @@ async def cyberpunk(callback):
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "firstCP")
 async def firstCP(callback):
+    promt = promt21
+    user_id = callback.message.chat.id
+
+    add_to_history(user_id, 'bot', promt)
 
     await bot.send_chat_action(callback.message.chat.id, 'Typing')
 
-    responce = openai_client.responses.create(model='gpt-5-nano', input=promt21, store=True)
-    ans = responce.output_text
+    responce = client.chat.completions.create(model="GigaChat", messages=[{"role": "user", "content": promt21}])
+    ans = responce.choices[0].message.content
 
     await bot.send_message(callback.message.chat.id, ans)
+    add_to_history(user_id, 'bot', ans)
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "secondCP")
 async def secondCP(callback):
+    promt = promt22
+    user_id = callback.message.chat.id
+
+    add_to_history(user_id, 'bot', promt)
 
     await bot.send_chat_action(callback.message.chat.id, 'Typing')
 
-    responce = openai_client.responses.create(model='gpt-5-nano', input=promt22, store=True)
-    ans = responce.output_text
+    responce = client.chat.completions.create(model="GigaChat", messages=[{"role": "user", "content": promt22}])
+    ans = responce.choices[0].message.content
 
     await bot.send_message(callback.message.chat.id, ans)
+    add_to_history(user_id, 'bot', ans)
+
 
 #steampunk
 @bot.callback_query_handler(func=lambda callback: callback.data == 'steampunk')
@@ -101,20 +126,30 @@ async def steampunk(callback):
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "firstSP")
 async def firstSP(callback):
+    promt = promt31
+    user_id = callback.message.chat.id
+
+    add_to_history(user_id, 'bot', promt)
 
     await bot.send_chat_action(callback.message.chat.id, 'Typing')
 
-    responce = openai_client.responses.create(model='gpt-5-nano', input=promt31, store=True)
-    ans = responce.output_text
+    responce = client.chat.completions.create(model="GigaChat", messages=[{"role": "user", "content": promt31}])
+    ans = responce.choices[0].message.content
 
     await bot.send_message(callback.message.chat.id, ans)
+    add_to_history(user_id, 'bot', ans)
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "secondSP")
 async def secondSp(callback):
+    promt = promt32
+    user_id = callback.message.chat.id
+
+    add_to_history(user_id, 'bot', promt)
 
     await bot.send_chat_action(callback.message.chat.id, 'Typing')
 
-    responce = openai_client.responses.create(model='gpt-5-nano', input=promt32, store=True)
-    ans = responce.output_text
+    responce = client.chat.completions.create(model="GigaChat", messages=[{"role": "user", "content": promt32}])
+    ans = responce.choices[0].message.content
 
     await bot.send_message(callback.message.chat.id, ans)
+    add_to_history(user_id, 'bot', ans)
